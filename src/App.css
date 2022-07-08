@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+nav{
+  background: rgb(174,120,255);
+  background: linear-gradient(90deg, rgba(174,120,255,1) 0%, rgba(90,46,251,1) 52%, rgba(0,155,255,1) 100%);
+  font-size: larger;
+}
