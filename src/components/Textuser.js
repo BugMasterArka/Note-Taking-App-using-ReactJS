@@ -1,4 +1,5 @@
 
+import HTMLReactParser from 'html-react-parser';
 import React,{useState} from 'react'
 import Noteitem from './Noteitem'
 
@@ -12,6 +13,28 @@ export default function Textuser() {
         stateNow: false,
         index: -1
     });
+
+    const checkURL = (string)=>{
+        let index=-1;
+        let strArray = string.split(' ')
+        // let pattern = "/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g";
+        // eslint-disable-next-line
+        let matches = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+        for(let i=0;i<matches.length;i++){
+            index = strArray.findIndex(element=>element===matches[i]);
+            if(index!==-1){
+                console.log("this is ",index);
+                let foundURL = string.split(' ')[index];
+                let finalURL = `<a target="_blank" class="card-link" href="${foundURL}">${foundURL}</a>`;
+                console.log(finalURL);
+                strArray.splice(index,1);
+                strArray.splice(index,0,finalURL);
+                console.log(strArray);
+            }
+            index=-1;
+        }
+        return strArray.join(" ");
+    }
 
     const handleOnChange = (event)=> {
         setText(event.target.value);
@@ -29,7 +52,7 @@ export default function Textuser() {
             console.log(text);
             let continued = [{
                 title: titlegiven.length!==0?titlegiven:now,
-                content: text?text:"this is sample text"
+                content: text?checkURL(text):"this is sample text"
             }];
             if(notes.length===0){
                 setNotes(continued);
@@ -91,7 +114,7 @@ export default function Textuser() {
             <div className="row container text-center">
                 {notes.map((element)=>{
                     return <div className="col-md-4 col-lg-3 my-2 d-flex justify-content-center" key={element.title}>
-                    <Noteitem title={element.title} content={element.content} restore={restoreText} deletion={deleteNote} edit={editNote}/>
+                    <Noteitem title={element.title} content={HTMLReactParser(element.content)} restore={restoreText} deletion={deleteNote} edit={editNote}/>
                     </div>
                 })}
             </div>
