@@ -16,40 +16,45 @@ export default function Textuser() {
 
     const checkURL = (string)=>{
         let index=-1;
-        let strArray = string.split(' ')
+        let strArray = string.split(' ');
+        let matches=[];
         // let pattern = "/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g";
         // eslint-disable-next-line
-        let matches = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-        for(let i=0;i<matches.length;i++){
-            index = strArray.findIndex(element=>element===matches[i]);
-            if(index!==-1){
-                console.log("this is ",index);
-                let foundURL = string.split(' ')[index];
-                let finalURL = `<a target="_blank" class="card-link" href="${foundURL}">${foundURL}</a>`;
-                console.log(finalURL);
-                strArray.splice(index,1);
-                strArray.splice(index,0,finalURL);
-                console.log(strArray);
+        matches = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+        // console.log(matches);
+        if(matches!==null){
+            for(let i=0;i<matches.length;i++){
+                index = strArray.findIndex(element=>element===matches[i]);
+                if(index!==-1){
+                    // console.log("this is ",index);
+                    let foundURL = string.split(' ')[index];
+                    let finalURL = `<a target="_blank" class="card-link" href="${foundURL}">${foundURL}</a>`;
+                    // console.log(finalURL);
+                    strArray.splice(index,1);
+                    strArray.splice(index,0,finalURL);
+                    // console.log(strArray);
+                }
+                index=-1;
             }
-            index=-1;
         }
         return strArray.join(" ");
+        // return string;
     }
 
     const handleOnChange = (event)=> {
         setText(event.target.value);
-        console.log(notes.length);
-        console.log(notes);
+        // console.log(notes.length);
+        // console.log(notes);
     }
 
     const handleonSave = ()=>{
         if(edit.stateNow===false){
-            console.log(notes.length);
+            // console.log(notes.length);
             let nowDate = new Date().toDateString();
             let nowTime = new Date().toTimeString().split(' ')[0];
             let now = nowDate + ' at '+nowTime;
             let titlegiven = document.getElementById('myTitle').value;
-            console.log(text);
+            // console.log(text);
             let continued = [{
                 title: titlegiven.length!==0?titlegiven:now,
                 content: text?checkURL(text):"this is sample text"
@@ -60,8 +65,8 @@ export default function Textuser() {
             else{
                 setNotes(continued.concat(notes));
             }
-            console.log(notes);
-            console.log(notes.length);
+            // console.log(notes);
+            // console.log(notes.length);
             setText('');
             document.getElementById('myTitle').value='';
         }
