@@ -2,7 +2,7 @@
 import HTMLReactParser from 'html-react-parser';
 import React,{useState} from 'react'
 import Noteitem from './Noteitem'
-import $ from 'jquery';
+// import $ from 'jquery';
 
 export default function Textuser() {
 
@@ -42,8 +42,8 @@ export default function Textuser() {
         // return string;
     }
 
-    const handleOnChange = (event)=> {
-        setText(event.target.value);
+    const handleOnChange = ()=> {
+        setText(document.getElementById('myBox').innerHTML);
         // console.log(notes.length);
         // console.log(notes);
     }
@@ -69,6 +69,7 @@ export default function Textuser() {
             // console.log(notes);
             // console.log(notes.length);
             setText('');
+            document.getElementById('myBox').innerHTML='';
             document.getElementById('myTitle').value='';
         }
         else{
@@ -76,6 +77,7 @@ export default function Textuser() {
             notes[edit.index].content=text?text:"this is sample text";
             setEdit({stateNow: false,index: -1});
             setText('');
+            document.getElementById('myBox').innerHTML='';
             document.getElementById('myTitle').value='';
         }
     }
@@ -86,6 +88,7 @@ export default function Textuser() {
 
     const restoreText = (input)=> {
         setText(input);
+        document.getElementById('myBox').innerHTML=input;
     }
 
     const deleteNote = (key)=>{
@@ -102,6 +105,7 @@ export default function Textuser() {
         setEdit({stateNow: true,index: index});
         document.getElementById('myTitle').value=notes[index].title;
         setText(notes[index].content);
+        document.getElementById('myBox').innerHTML=notes[index].content;
     }
 
     // where i am passing the value of the text area as value={text}
@@ -118,9 +122,9 @@ const makeBold = ()=> {
         let beBold=givenString.substring(foundAt,foundAt+stringToFind.length);
         console.log(beBold);
         console.log(givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length));
-        let done = $.parseHTML(givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length)),nodeNames=[];
-        setText(done.join(''));
-        // givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length)
+        // let done = $.parseHTML(givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length));
+        setText(givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length));
+        
     }
 }
 const giveSelectedText = ()=>{
@@ -157,7 +161,8 @@ const giveSelectedText = ()=>{
             <h1>Enter you Text</h1>
             <div className="mb-3 my-3">
                 <input className="form-control form-control-sm my-2" type="text" placeholder=" Enter title" id="myTitle"/>
-                <input className="form-control" value={text} onChange={handleOnChange} id="myBox" placeholder='Enter the content' style={{height: '15vh'}}/>
+                {/* innerHTML={text}  */}
+                <div className="form-control" onInput={handleOnChange} id="myBox" placeholder='Enter the content' contentEditable="true" style={{height: '15vh',border: '1px solid'}}></div>
             </div>
             <div className="container d-flex justify-content-between">
                 <div className="container d-flex justify-content-start">
