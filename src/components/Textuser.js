@@ -2,6 +2,7 @@
 import HTMLReactParser from 'html-react-parser';
 import React,{useState} from 'react'
 import Noteitem from './Noteitem'
+import $ from 'jquery';
 
 export default function Textuser() {
 
@@ -102,6 +103,52 @@ export default function Textuser() {
         document.getElementById('myTitle').value=notes[index].title;
         setText(notes[index].content);
     }
+
+    // where i am passing the value of the text area as value={text}
+// change that value={text} to value={HTMLReactParser(text)}
+const makeBold = ()=> {
+    let stringToFind = giveSelectedText();
+    console.log(stringToFind);
+    if(stringToFind!==null){
+        let givenString = text;
+        console.log(givenString);
+        let foundAt = -1;
+        foundAt=givenString.indexOf(stringToFind);
+        console.log(foundAt);
+        let beBold=givenString.substring(foundAt,foundAt+stringToFind.length);
+        console.log(beBold);
+        console.log(givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length));
+        let done = $.parseHTML(givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length)),nodeNames=[];
+        setText(done.join(''));
+        // givenString.substring(0,foundAt)+`<b>${beBold}</b>`+givenString.substring(foundAt+stringToFind.length)
+    }
+}
+const giveSelectedText = ()=>{
+    // var selectedText = '';
+    // if (window.getSelection) {
+    //     selectedText = window.getSelection().toString();
+    // }
+    // else if (document.getSelection) {
+    //     selectedText = document.getSelection();
+    // }
+    // else if (document.selection) {
+    //     selectedText = document.selection.createRange().text;
+    // } 
+    // else return;
+    // return selectedText;
+    var selectedtext = "";
+    var activeEl = document.activeElement;
+    var activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
+    if (
+        (activeElTagName === "textarea") || (((activeElTagName === "input") && (/^(?:text|search|password|tel|url)$/i.test(activeEl.type))) && (typeof activeEl.selectionStart == "number"))
+    ) {
+        selectedtext = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
+    } else if (window.getSelection) {
+        selectedtext = window.getSelection().toString();
+    }
+    console.log(selectedtext);
+    return selectedtext;
+}
     
 
     return (
@@ -110,10 +157,15 @@ export default function Textuser() {
             <h1>Enter you Text</h1>
             <div className="mb-3 my-3">
                 <input className="form-control form-control-sm my-2" type="text" placeholder=" Enter title" id="myTitle"/>
-                <textarea className="form-control" value={text} onChange={handleOnChange} id="myBox" rows="5" placeholder='Enter the content'></textarea>
+                <input className="form-control" value={text} onChange={handleOnChange} id="myBox" placeholder='Enter the content' style={{height: '15vh'}}/>
             </div>
-            <button type="button" className="btn btn-outline-dark" onClick={handleonSave}>Save</button>
-            <button type="button" className="btn btn-dark mx-2" onClick={handleOnCopy}>Copy Text</button>
+            <div className="container d-flex justify-content-between">
+                <div className="container d-flex justify-content-start">
+                <button type="button" className="btn btn-outline-dark" onClick={handleonSave}>Save</button>
+                <button type="button" className="btn btn-dark mx-2" onClick={handleOnCopy}>Copy Text</button>
+                </div>
+                <button type="button" className="btn btn-info" onClick={makeBold}><i className="fa-solid fa-bold"></i></button>
+            </div>
         </div>
         <div className="d-flex justify-content-center">
             <div className="row container text-center">
